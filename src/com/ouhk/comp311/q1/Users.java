@@ -16,7 +16,12 @@ import static com.ouhk.comp311.constant.UserConstant.*;
 
 public class Users {
 
-    public static void main(String[] args) throws SQLException, IOException {
+    public static void main(String[] args){
+        if (args.length != 3) {
+            System.out.println("Error Action, Please Input Correct Parameter");
+            return;
+        }
+
         String action = args[0];
         String userName = args[1];
         String password = args[2];
@@ -68,11 +73,12 @@ public class Users {
                 int count = resultSet.getInt(1);
                 if (count > 0) {
                     System.out.println("Authenticating user " + userName + ": YES");
+                    return true;
                 } else {
                     System.out.println("Authenticating user " + userName + ": NO");
+                    return false;
                 }
             }
-            return true;
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         } finally {
@@ -89,7 +95,7 @@ public class Users {
         List<String> userNameList = new ArrayList<>();
         try {
             connection = DbUtil.getConnection();
-            pstm = connection.prepareStatement(CHECK_USER_SQL);
+            pstm = connection.prepareStatement(GET_ALL_USER_SQL);
             resultSet = pstm.executeQuery();
             while (resultSet.next()) {
                 String userName = resultSet.getString("Name");

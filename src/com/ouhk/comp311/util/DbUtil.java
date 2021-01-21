@@ -12,16 +12,14 @@ public class DbUtil {
     public static Connection getConnection() throws IOException {
         Properties prop = new Properties();
         InputStream fis = Users.class.getResourceAsStream("database.properties");
-        //InputStream fis = Files.newInputStream(Paths.get("database.properties"));
         try {
             prop.load(fis);
-            String drivers = prop.getProperty("jdbc.drivers");
-            System.setProperty("jdbc.drivers", drivers);
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
             String url = prop.getProperty("jdbc.url");
             String userName = prop.getProperty("jdbc.username");
             String password = prop.getProperty("jdbc.password");
             return DriverManager.getConnection(url, userName, password);
-        } catch (IOException | SQLException e) {
+        } catch (IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 

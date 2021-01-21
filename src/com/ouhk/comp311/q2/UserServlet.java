@@ -8,27 +8,37 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet("/users")
 public class UserServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String password = request.getParameter("password");
+        String name = request.getParameter("name").trim();
+        String password = request.getParameter("password").trim();
+
+        if ("".equals(name) || name == null) {
+            request.setAttribute("error", true);
+        }
+
+        if ("".equals(name) || name == null) {
+            request.setAttribute("error", true);
+        }
+
         boolean isCorrect = Users.checkUser(name, password);
 
         if (isCorrect) {
             List<String> allUser = Users.getAllUser();
+            request.setAttribute("userList", allUser);
+        } else {
+            request.setAttribute("error", true);
         }
+        request.getRequestDispatcher("users.jsp").forward(request, response);
 
-        response.sendRedirect("/users.jsp");
+
     }
 
     protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        out.write("实现Servlet");
+        this.doPost(request, response);
     }
 }
