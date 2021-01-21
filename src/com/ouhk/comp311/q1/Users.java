@@ -7,6 +7,8 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -80,5 +82,25 @@ public class Users {
         return false;
     }
 
+    public static List<String> getAllUser() {
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        ResultSet resultSet = null;
+        List<String> userNameList = new ArrayList<>();
+        try {
+            connection = DbUtil.getConnection();
+            pstm = connection.prepareStatement(CHECK_USER_SQL);
+            resultSet = pstm.executeQuery();
+            while (resultSet.next()) {
+                String userName = resultSet.getString("Name");
+                userNameList.add(userName);
+            }
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DbUtil.close(connection, pstm, resultSet);
+        }
 
+        return userNameList;
+    }
 }
