@@ -14,10 +14,11 @@ public class DbUtil {
         InputStream fis = Users.class.getResourceAsStream("database.properties");
         try {
             prop.load(fis);
-            Class.forName("org.apache.derby.jdbc.ClientDriver");
+            String driver = prop.getProperty("jdbc.drivers");
             String url = prop.getProperty("jdbc.url");
             String userName = prop.getProperty("jdbc.username");
             String password = prop.getProperty("jdbc.password");
+            Class.forName(driver);
             return DriverManager.getConnection(url, userName, password);
         } catch (IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
